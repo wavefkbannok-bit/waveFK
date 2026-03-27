@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สร้าง Telegram Bot - waveFK Guide</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: #0e1621;
+    color: #e0e0e0;
+    padding: 20px;
+    line-height: 1.6;
+  }
+  h1 { color: #2AABEE; text-align: center; padding: 20px 0 10px; font-size: 1.8em; }
+  .subtitle { text-align: center; color: #8899aa; margin-bottom: 30px; }
+  .step-container { max-width: 700px; margin: 0 auto; }
+  .step {
+    background: #17212b;
+    border: 1px solid #2b3847;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .step-header {
+    background: #2AABEE;
+    color: #fff;
+    padding: 12px 20px;
+    font-weight: bold;
+    font-size: 1.05em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .step-num {
+    background: rgba(0,0,0,0.25);
+    border-radius: 50%;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9em; flex-shrink: 0;
+  }
+  .step-body { padding: 20px; }
+  .chat-mock {
+    background: #0e1621;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 15px 0;
+    border: 1px solid #2b3847;
+    font-family: monospace;
+    font-size: 0.95em;
+  }
+  .msg-you {
+    background: #2b5278;
+    border-radius: 8px 8px 2px 8px;
+    padding: 8px 12px;
+    margin: 6px 0 6px auto;
+    max-width: 85%;
+    width: fit-content;
+    margin-left: auto;
+    color: #fff;
+  }
+  .msg-bot {
+    background: #17212b;
+    border: 1px solid #2b3847;
+    border-radius: 8px 8px 8px 2px;
+    padding: 8px 12px;
+    margin: 6px 0;
+    max-width: 85%;
+    width: fit-content;
+    color: #e0e0e0;
+  }
+  .msg-label { font-size: 0.72em; color: #8899aa; margin-bottom: 3px; }
+  .token-box {
+    background: #1a2a1a;
+    border: 1px solid #2d5a2d;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-family: monospace;
+    color: #6ecf6e;
+    word-break: break-all;
+    font-size: 0.95em;
+  }
+  .token-label { font-size: 0.75em; color: #4a8a4a; margin-bottom: 5px; }
+  .note {
+    background: #1a1a0a;
+    border-left: 3px solid #f0c040;
+    padding: 10px 14px;
+    margin: 12px 0;
+    border-radius: 0 8px 8px 0;
+    color: #d4b840;
+    font-size: 0.9em;
+  }
+  .success {
+    background: #0a1a0a;
+    border: 1px solid #2d5a2d;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 12px 0;
+    color: #6ecf6e;
+    text-align: center;
+  }
+  .arrow { color: #2AABEE; margin: 0 5px; }
+  code {
+    background: #0e1621;
+    border: 1px solid #2b3847;
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-family: monospace;
+    color: #2AABEE;
+    font-size: 0.92em;
+  }
+  .botfather-name { color: #2AABEE; font-weight: bold; }
+  ul { padding-left: 20px; }
+  ul li { margin: 6px 0; }
+  .final-box {
+    background: #17212b;
+    border: 2px solid #2AABEE;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+  }
+  .final-box h3 { color: #2AABEE; margin-bottom: 10px; }
+  .token-display {
+    background: #0e1621;
+    border: 1px dashed #2AABEE;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+    font-family: monospace;
+    color: #6ecf6e;
+    font-size: 1.1em;
+    letter-spacing: 0.5px;
+  }
+  .footer { text-align: center; color: #8899aa; margin-top: 30px; font-size: 0.85em; }
+</style>
+</head>
+<body>
+
+<h1>🤖 สร้าง Telegram Bot</h1>
+<p class="subtitle">คู่มือทีละขั้นตอน — ใช้เวลาประมาณ 3 นาที</p>
+
+<div class="step-container">
+
+  <!-- STEP 1 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      เปิด Telegram แล้วค้นหา BotFather
+    </div>
+    <div class="step-body">
+      <p>ใน Telegram (มือถือหรือคอม) ค้นหาชื่อ <span class="botfather-name">@BotFather</span></p>
+      <div class="chat-mock">
+        <div style="color:#8899aa; font-size:0.8em; margin-bottom:8px;">🔍 Search bar</div>
+        <div style="background:#2b3847; border-radius:8px; padding:10px; display:flex; align-items:center; gap:10px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:#2AABEE;display:flex;align-items:center;justify-content:center;font-size:1.3em;flex-shrink:0;">🤖</div>
+          <div>
+            <div style="color:#fff;font-weight:bold;">BotFather</div>
+            <div style="color:#8899aa;font-size:0.85em;">@BotFather · Official</div>
+          </div>
+        </div>
+      </div>
+      <div class="note">⚠️ ให้แน่ใจว่าเลือก BotFather ที่มีเครื่องหมาย ✓ สีน้ำเงิน (Official)</div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      ส่งคำสั่ง /newbot
+    </div>
+    <div class="step-body">
+      <p>พิมพ์และส่งข้อความนี้ไปหา BotFather:</p>
+      <div class="chat-mock">
+        <div class="msg-label">คุณ</div>
+        <div class="msg-you">/newbot</div>
+        <div class="msg-label" style="margin-top:10px;">BotFather</div>
+        <div class="msg-bot">Alright, a new bot. How are we going to call it? Please choose a name for your bot.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      ตั้งชื่อ Bot (ชื่อแสดง)
+    </div>
+    <div class="step-body">
+      <p>ตั้งชื่อที่แสดงให้คนอื่นเห็น เช่น:</p>
+      <div class="chat-mock">
+        <div class="msg-label">คุณ</div>
+        <div class="msg-you">waveFK Assistant</div>
+        <div class="msg-label" style="margin-top:10px;">BotFather</div>
+        <div class="msg-bot">Good. Now let's choose a username for your bot. It must end in `bot`. Like this, for example: TetrisBot or tetris_bot.</div>
+      </div>
+      <ul>
+        <li>ชื่ออะไรก็ได้ที่ชอบ</li>
+        <li>ใช้ภาษาอังกฤษหรือไทยก็ได้</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">4</div>
+      ตั้ง Username (ต้องลงท้ายด้วย bot)
+    </div>
+    <div class="step-body">
+      <p>ตั้ง username สำหรับ Bot ต้องลงท้ายด้วย <code>bot</code></p>
+      <div class="chat-mock">
+        <div class="msg-label">คุณ</div>
+        <div class="msg-you">wavefk_assistant_bot</div>
+        <div class="msg-label" style="margin-top:10px;">BotFather</div>
+        <div class="msg-bot">
+          Done! Congratulations on your new bot. You will find it at t.me/wavefk_assistant_bot. You can now add a description...
+          <br><br>
+          Use this token to access the HTTP API:<br>
+          <span style="color:#6ecf6e;font-family:monospace;">7412583920:AAHxyz_AbCdEfGhIjKlMnOpQrStUvWxYz123</span>
+          <br><br>
+          Keep your token secure and store it safely...
+        </div>
+      </div>
+      <div class="note">⚠️ ถ้าชื่อซ้ำ ให้ลองเพิ่มตัวเลขหรือเปลี่ยนชื่อ เช่น <code>wavefk2026_bot</code></div>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">5</div>
+      คัดลอก Bot Token
+    </div>
+    <div class="step-body">
+      <p>BotFather จะส่ง <strong>Bot Token</strong> มาให้ มีหน้าตาแบบนี้:</p>
+      <div class="token-box">
+        <div class="token-label">รูปแบบ Bot Token</div>
+        1234567890:AABBccDDeeFFggHHiiJJkkLLmmNNooPPqqRR
+      </div>
+      <ul>
+        <li>ตัวเลข <span class="arrow">→</span> ตัวอักษร/ตัวเลขผสม</li>
+        <li>คั่นด้วย <code>:</code> (colon)</li>
+        <li>ยาวประมาณ 46 ตัวอักษร</li>
+      </ul>
+      <div class="note">🔐 เก็บ Token ไว้เป็นความลับ อย่าแชร์ให้ใคร</div>
+    </div>
+  </div>
+
+  <!-- FINAL -->
+  <div class="final-box">
+    <h3>✅ ได้ Bot Token แล้ว!</h3>
+    <p style="color:#8899aa; margin-bottom:15px;">นำ Token ไปใส่ใน <code>START-HERE.bat</code> → เลือก [2]</p>
+    <div class="token-display">
+      ตัวอย่าง: 7412583920:AAHxyz_AbCdEfGhIjKlMnOpQrStUvWxYz123
+    </div>
+    <p style="color:#8899aa; font-size:0.9em; margin-top:10px;">
+      สคริปต์จะถามคุณ 2 อย่าง: Bot Token + Claude API Key<br>
+      แล้วตั้งค่าทุกอย่างให้อัตโนมัติ
+    </p>
+  </div>
+
+  <!-- TROUBLESHOOT -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num">?</div>
+      ปัญหาที่พบบ่อย
+    </div>
+    <div class="step-body">
+      <ul>
+        <li><strong>Username ถูกใช้ไปแล้ว</strong> → ลองเพิ่มตัวเลขท้าย เช่น <code>wavefk2026_bot</code></li>
+        <li><strong>ไม่เห็น Token</strong> → ส่ง <code>/mybots</code> ให้ BotFather แล้วเลือก Bot ของคุณ → API Token</li>
+        <li><strong>ต้องการ Token ใหม่</strong> → ส่ง <code>/revoke</code> ให้ BotFather</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<p class="footer">waveFK Home Assistant · คู่มือ Telegram Bot</p>
+
+</body>
+</html>
