@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>waveFK — คู่มือทีละขั้นตอน</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',sans-serif;background:#1a1a2e;color:#e0e0e0;padding:20px 16px 80px;}
+h1{text-align:center;color:#4fc3f7;font-size:1.5em;padding:24px 0 6px;}
+.subtitle{text-align:center;color:#90a4ae;margin-bottom:36px;font-size:0.9em;}
+
+/* Step wrapper */
+.step-wrap{max-width:780px;margin:0 auto 48px;}
+.step-header{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
+.step-badge{background:#4fc3f7;color:#0d0d1a;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1em;flex-shrink:0;}
+.step-badge.done{background:#66bb6a;}
+.step-badge.warn{background:#ffa726;}
+.step-title{font-size:1.1em;font-weight:bold;color:#fff;}
+.step-desc{font-size:0.85em;color:#90a4ae;margin-top:3px;}
+
+/* Screen mockup */
+.screen{border-radius:10px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.5);margin-bottom:12px;}
+.screen-bar{display:flex;align-items:center;padding:8px 14px;gap:7px;font-size:0.75em;}
+.screen-dot{width:12px;height:12px;border-radius:50%;}
+
+/* Browser mockup */
+.browser .screen-bar{background:#2d2d2d;}
+.browser .url-bar{flex:1;background:#1a1a1a;border-radius:5px;padding:4px 10px;color:#90a4ae;font-size:0.85em;font-family:monospace;}
+.browser .content{background:#fff;color:#333;}
+
+/* Windows Explorer */
+.explorer .screen-bar{background:#1e3a5f;color:#90caf9;}
+.explorer .content{background:#1e1e2e;color:#e0e0e0;}
+
+/* PowerShell */
+.ps .screen-bar{background:#012456;color:#90caf9;}
+.ps-title{font-size:0.85em;}
+.ps .content{background:#012456;font-family:'Consolas','Courier New',monospace;font-size:0.82em;color:#f0f0f0;padding:14px 16px;line-height:1.7;}
+.ps-green{color:#4caf50;}
+.ps-cyan{color:#4fc3f7;}
+.ps-yellow{color:#ffeb3b;}
+.ps-gray{color:#90a4ae;}
+.ps-cursor{display:inline-block;background:#f0f0f0;width:8px;height:14px;vertical-align:middle;animation:blink 1s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* Telegram mockup */
+.telegram .screen-bar{background:#1c2b3a;}
+.telegram .content{background:#0e1621;padding:12px;}
+.tg-header{background:#17212b;padding:10px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #2b3847;}
+.tg-avatar{width:36px;height:36px;border-radius:50%;background:#2AABEE;display:flex;align-items:center;justify-content:center;font-size:1.2em;flex-shrink:0;}
+.tg-name{font-weight:bold;font-size:0.9em;color:#fff;}
+.tg-status{font-size:0.75em;color:#4fc3f7;}
+.tg-msgs{padding:12px 8px;display:flex;flex-direction:column;gap:8px;}
+.msg-out{align-self:flex-end;background:#2b5278;color:#fff;border-radius:12px 12px 2px 12px;padding:8px 12px;max-width:80%;font-size:0.85em;}
+.msg-in{align-self:flex-start;background:#17212b;color:#e0e0e0;border-radius:12px 12px 12px 2px;padding:8px 12px;max-width:80%;font-size:0.85em;border:1px solid #2b3847;}
+.msg-time{font-size:0.68em;color:#90a4ae;margin-top:3px;text-align:right;}
+.tg-input{background:#17212b;border-top:1px solid #2b3847;padding:8px 12px;display:flex;align-items:center;gap:8px;color:#90a4ae;font-size:0.85em;}
+
+/* n8n mockup */
+.n8n-bg{background:#1a1a2e;padding:12px;}
+.n8n-node{display:inline-flex;align-items:center;gap:8px;background:#2d2d44;border:2px solid #4fc3f7;border-radius:8px;padding:8px 14px;font-size:0.8em;color:#fff;}
+.n8n-node.green{border-color:#66bb6a;}
+.n8n-arrow{color:#4fc3f7;font-size:1.2em;padding:0 4px;}
+.n8n-flow{display:flex;align-items:center;flex-wrap:wrap;gap:4px;padding:8px;}
+
+/* GitHub mockup */
+.github-content{background:#0d1117;padding:20px;}
+.gh-repo-name{color:#58a6ff;font-size:1.1em;font-weight:bold;margin-bottom:8px;}
+.gh-btn{display:inline-flex;align-items:center;gap:6px;background:#238636;color:#fff;border-radius:6px;padding:6px 14px;font-size:0.85em;cursor:pointer;margin-top:8px;}
+.gh-dropdown{background:#161b22;border:1px solid #30363d;border-radius:6px;padding:8px;margin-top:6px;font-size:0.82em;}
+.gh-dl-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:5px;color:#c9d1d9;cursor:pointer;}
+.gh-dl-item:hover{background:#21262d;}
+.gh-dl-item .icon{font-size:1em;}
+
+/* Note box */
+.note{display:flex;gap:10px;background:#1a1a0a;border-left:3px solid #ffa726;border-radius:0 8px 8px 0;padding:10px 14px;margin-top:10px;font-size:0.85em;color:#ffcc80;}
+.tip{background:#0a1a0a;border-left-color:#66bb6a;color:#a5d6a7;}
+
+/* Highlight arrow */
+.arrow-box{text-align:center;padding:10px 0 2px;color:#ffa726;font-size:0.85em;}
+.click-here{display:inline-block;background:#ffa726;color:#0d0d1a;border-radius:20px;padding:3px 12px;font-size:0.8em;font-weight:bold;margin-left:8px;}
+
+/* CMD window */
+.cmd .screen-bar{background:#1a1a1a;}
+.cmd .content{background:#0c0c0c;font-family:'Consolas','Courier New',monospace;font-size:0.82em;color:#cccccc;padding:14px 16px;line-height:1.8;}
+
+/* Progress bar */
+.progress-bar{height:4px;background:#0d2045;border-radius:2px;margin-bottom:4px;}
+.progress-fill{height:100%;background:#4fc3f7;border-radius:2px;}
+</style>
+</head>
+<body>
+
+<h1>📖 คู่มือทีละขั้นตอน — waveFK Setup</h1>
+<p class="subtitle">ทำตามทีละขั้น ใช้เวลารวมประมาณ 10–15 นาที</p>
+
+<!-- ════════════════════════════════════════ -->
+<!-- STEP 1: ดาวน์โหลด repo -->
+<!-- ════════════════════════════════════════ -->
+<div class="step-wrap">
+  <div class="step-header">
+    <div class="step-badge">1</div>
+    <div>
+      <div class="step-title">ดาวน์โหลดไฟล์จาก GitHub</div>
+      <div class="step-desc">เปิดเบราว์เซอร์ไปที่ github.com/wavefkbannok-bit/waveFK แล้วกด Code → Download ZIP</div>
+    </div>
+  </div>
+
+  <div class="screen browser">
+    <div class="screen-bar">
+      <div class="screen-dot" style="background:#ff5f56;"></div>
+      <div class="screen-dot" style="background:#ffbd2e;"></div>
+      <div class="screen-dot" style="background:#27c93f;"></div>
+      <div class="url-bar">github.com/wavefkbannok-bit/waveFK</div>
+    </div>
+    <div class="github-content">
+      <div class="gh-repo-name">📁 wavefkbannok-bit / waveFK</div>
+      <div style="font-size:0.8em;color:#8b949e;margin-bottom:14px;">Home Assistant — Telegram + n8n + Claude AI</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start;">
+        <div>
+          <div class="gh-btn" style="background:#238636;">⬇ Code ▾</div>
+          <div class="gh-dropdown" style="margin-top:4px;">
+            <div class="gh-dl-item" style="color:#58a6ff;">
+              <span class="icon">📥</span>
+              <div>
+                <div style="font-weight:bold;">Download ZIP</div>
+                <div style="font-size:0.82em;color:#8b949e;">ดาวน์โหลดทั้งโปรเจก</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="arrow-box">👆 กดตรงนี้ <span class="click-here">CLICK</span></div>
+    </div>
+  </div>
+
+  <div class="note">💡 ไฟล์จะดาวน์โหลดเป็น <strong>waveFK-main.zip</strong> ไปที่โฟลเดอร์ Downloads</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- STEP 2: แตก ZIP -->
+<!-- ════════════════════════════════════════ -->
+<div class="step-wrap">
+  <div class="step-header">
+    <div class="step-badge">2</div>
+    <div>
+      <div class="step-title">แตกไฟล์ ZIP</div>
+      <div class="step-desc">คลิกขวาที่ waveFK-main.zip → Extract All → เลือกที่เก็บ (เช่น Desktop)</div>
+    </div>
+  </div>
+
+  <div class="screen explorer">
+    <div class="screen-bar">
+      <div class="screen-dot" style="background:#ff5f56;"></div>
+      <div class="screen-dot" style="background:#ffbd2e;"></div>
+      <div class="screen-dot" style="background:#27c93f;"></div>
+      <span class="ps-title">📁 Downloads</span>
+    </div>
+    <div class="content" style="padding:16px;">
+      <div style="display:flex;align-items:center;gap:12px;background:#252535;border-radius:8px;padding:10px 14px;margin-bottom:8px;">
+        <div style="font-size:1.8em;">🗜️</div>
+        <div>
+          <div style="font-size:0.9em;font-weight:bold;">waveFK-main.zip</div>
+          <div style="font-size:0.75em;color:#90a4ae;">ZIP File · 12 KB</div>
+        </div>
+        <div style="margin-left:auto;background:#2b3a5c;border-radius:6px;padding:5px 12px;font-size:0.8em;color:#4fc3f7;cursor:pointer;">คลิกขวา</div>
+      </div>
+      <div style="background:#1a1a2e;border:1px solid #30363d;border-radius:8px;padding:8px 0;font-size:0.82em;margin-left:40px;">
+        <div style="padding:7px 16px;color:#fff;background:#1f3a5f;cursor:pointer;">📂 Extract All...</div>
+        <div style="padding:7px 16px;color:#c9d1d9;">Open</div>
+        <div style="padding:7px 16px;color:#c9d1d9;">Copy</div>
+      </div>
+      <div class="arrow-box">👆 กด <strong>Extract All...</strong> <span class="click-here">CLICK</span></div>
+    </div>
+  </div>
+
+  <div class="note tip">✅ หลังแตกไฟล์จะได้โฟลเดอร์ <strong>waveFK-main</strong> — เปิดเข้าไปข้างใน</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- STEP 3: สร้าง Telegram Bot -->
+<!-- ════════════════════════════════════════ -->
+<div class="step-wrap">
+  <div class="step-header">
+    <div class="step-badge warn">3</div>
+    <div>
+      <div class="step-title">สร้าง Telegram Bot (ทำครั้งเดียว)</div>
+      <div class="step-desc">เปิด Telegram → ค้นหา @BotFather → ส่ง /newbot → ทำตามขั้นตอน → คัดลอก Token</div>
+    </div>
+  </div>
+
+  <div class="screen telegram">
+    <div class="screen-bar">
+      <div class="screen-dot" style="background:#ff5f56;"></div>
+      <div class="screen-dot" style="background:#ffbd2e;"></div>
+      <div class="screen-dot" style="background:#27c93f;"></div>
+    </div>
+    <div class="tg-header">
+      <div class="tg-avatar">🤖</div>
+      <div>
+        <div class="tg-name">BotFather</div>
+        <div class="tg-status">✓ Official</div>
+      </div>
+    </div>
+    <div class="tg-msgs">
+      <div class="msg-out">/newbot<div class="msg-time">คุณ</div></div>
+      <div class="msg-in">Alright! How are we going to call it? Please choose a <b>name</b> for your bot.<div class="msg-time">BotFather</div></div>
+      <div class="msg-out">waveFK Assistant<div class="msg-time">คุณ</div></div>
+      <div class="msg-in">Good. Now choose a <b>username</b> — must end in <code>bot</code>.<div class="msg-time">BotFather</div></div>
+      <div class="msg-out">wavefk_assistant_bot<div class="msg-time">คุณ</div></div>
+      <div class="msg-in" style="border-color:#4caf50;">
+        ✅ Done! Use this token:<br>
+        <span style="color:#4fc3f7;font-family:monospace;font-size:0.9em;word-break:break-all;">7412583920:AAHxyzAbCdEfGhIjKlMnOpQrStUv123</span>
+        <div class="msg-time">BotFather — <strong style="color:#ffa726;">คัดลอก Token นี้!</strong></div>
+      </div>
+    </div>
+    <div class="tg-input">🎤 &nbsp; พิมพ์ข้อความ...</div>
+  </div>
+
+  <div class="note">🔐 <strong>Token</strong> มีรูปแบบ: <code>ตัวเลข:ตัวอักษร</code> — เก็บไว้ใช้ใน Step 5</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- STEP 4: รัน START-HERE.bat [1] -->
+<!-- ════════════════════════════════════════ -->
+<div class="step-wrap">
+  <div class="step-header">
+    <div class="step-badge">4</div>
+    <div>
+      <div class="step-title">ดับเบิลคลิก START-HERE.bat → เลือก 1</div>
+      <div class="step-desc">ติดตั้ง Node.js + n8n อัตโนมัติ (ครั้งแรกอาจใช้เวลา 5 นาที)</div>
+    </div>
+  </div>
+
+  <div class="screen cmd">
+    <div class="screen-bar" style="background:#1a1a1a;">
+      <div class="screen-dot" style="background:#ff5f56;"></div>
+      <div class="screen-dot" style="background:#ffbd2e;"></div>
+      <div class="screen-dot" style="background:#27c93f;"></div>
+      <span style="font-size:0.8em;color:#90a4ae;margin-left:6px;">waveFK Setup</span>
+    </div>
+    <div class="content">
+      <div style="color:#4fc3f7;">==========================================</div>
+      <div style="color:#4fc3f7;">  waveFK - Home Assistant Setup</div>
+      <div style="color:#4fc3f7;">==========================================</div>
+      <div>&nbsp;</div>
+      <div>  [1] ติดตั้ง Node.js + n8n</div>
+      <div>  [2] ตั้งค่า Bot + เชื่อม Claude API</div>
+      <div>  [3] ดูคู่มือสร้าง Telegram Bot</div>
+      <div>  [Q] ออก</div>
+      <div>&nbsp;</div>
+      <div>เลือกขั้นตอน (1/2/3): <span style="color:#ffeb3b;">1</span><span class="ps-cursor"></span></div>
+    </div>
+  </div>
+
+  <div class="screen ps" style="margin-top:10px;">
+    <div class="screen-bar" style="background:#012456;">
+      <div class="screen-dot" style="background:#ff5f56;"></div>
+      <div class="screen-dot" style="background:#ffbd2e;"></div>
+      <div class="screen-dot" style="background:#27c93f;"></div>
+      <span class="ps-title" style="color:#90caf9;">Windows PowerShell (Administrator)</span>
+    </div>
+    <div class="content">
+      <div class="ps-cyan">[>>] ตรวจสอบ Node.js...</div>
+      <div class="ps-cyan">[>>] ติดตั้ง n8n (อาจใช้เวลา 3-5 นาที)...</div>
+      <div style="color:#90a4ae;">npm warn deprecated...</div>
+      <div style="color:#90a4ae;">added 892 packages in 47s</div>
+      <div class="ps-green">[OK] ติดตั้ง n8n สำเร็จ</div>
+      <div class="ps-cyan">[>>] กำลังเริ่ม n8n...</div>
+      <div>&nbsp;</div>
+      <div class="ps-yellow">  n8n จะเปิดที่: http://localhost:5678</div>
+      <div class="ps-yellow">  เมื่อ n8n พร้อมแล้ว ให้รัน: 2-autosetup.ps1</div>
+    </div>
+  </div>
+
+  <div class="note tip">✅ n8n จะเปิดเบราว์เซอร์ไปที่ http://localhost:5678 อัตโนมัติ — <strong>ทิ้งหน้าต่างนี้ไว้ อย่าปิด!</strong></div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- STEP 5: รัน START-HERE.bat [2] -->
+<!-- ════════════════════════════════════════ -->
+<div class="step-wrap">
+  <div class="step-header">
+    <div class="step-badge">5</div>
+    <div>
+      <div class="step-title">เปิด START-HERE.bat ใหม่ → เลือก 2</div>
+      <div class="step-desc">ใส่ Telegram Token + Claude API Key → สคริปต์ตั้งค่าทุกอย่างให้เอง</div>
+    </div>
+  </div>
+
+  <div class="screen ps">
+    <div class="screen-bar" style="background:#012456;">
+      <div class="screen-dot" style="background:#ff5f56;"></div>
+      <div class="screen-dot" style="background:#ffbd2e;"></div>
+      <div class="screen-dot" style="background:#27c93f;"></div>
+      <span class="ps-title" style="color:#90caf9;">Windows PowerShell — waveFK Auto Setup</span>
+    </div>
+    <div class="content">
+      <div class="ps-cyan">========================================</div>
+      <div class="ps-cyan">  waveFK - Auto Setup</div>
+      <div class="ps-cyan">========================================</div>
+      <div>&nbsp;</div>
+      <div>สคริปต์นี้จะตั้งค่า n8n ให้อัตโนมัติ</div>
+      <div>คุณต้องใส่ข้อมูล 2 อย่างเท่านั้น:</div>
+      <div>&nbsp;</div>
+      <div class="ps-yellow">1. Telegram Bot Token</div>
+      <div class="ps-gray">   (ได้จาก @BotFather ใน Telegram)</div>
+      <div>   ใส่ Bot Token: <span style="color:#ffeb3b;">7412583920:AAHxyz...</span><span class="ps-cursor"></span></div>
+      <div>&nbsp;</div>
+      <div class="ps-yellow">2. Claude (Anthropic) API Key</div>
+      <div class="ps-gray">   (จาก console.anthropic.com)</div>
+      <div>   ใส่ API Key: <span style="color:#ffeb3b;">sk-ant-api03-...</span></div>
+      <div>&nbsp;</div>
+      <div class="ps-cyan">[>>] รอให้ n8n เริ่มทำงาน...</div>
+      <div class="ps-green">[OK] n8n พร้อมแล้ว</div>
+      <div class="ps-green">[OK] สร้าง Telegram credential สำเร็จ</div>
+      <div class="ps-green">[OK] สร้าง Claude credential สำเร็จ</div>
+      <div class="ps-green">[OK] Import workflow สำเร็จ</div>
+      <div class="ps-green">[OK] Activate สำเร็จ</div>
+      <div>&nbsp;</div>
+      <div style="color:#4caf50;">========================================</div>
+      <div style="color:#4caf50;">  ตั้งค่าเสร็จสมบูรณ์! 🎉</div>
+      <div style="color:#4caf50;">========================================</div>
+    </div>
+  </div>
+
+  <div class="note">📌 Claude API Key หน้าตาแบบนี้: <code style="color:#4fc3f7;">sk-ant-api03-xxxxxxxxxx</code></div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- STEP 6: n8n พร้อม -->
+<!-- ════════════════════════════════════════ -->
+<div class="step-wrap">
+  <div class="step-header">
+    <div class="step-badge done">6</div>
+    <div>
+      <div class="step-title">n8n พร้อมแล้ว — Workflow Active</div>
+      <div class="step-desc">เบราว์เซอร์จะเปิด http://localhost:5678 แสดง workflow สีเขียว = ใช้งานได้</div>
+    </div>
+  </div>
+
+  <div class="screen browser">
+    <div class="screen-bar">
+      <div class="screen-dot" style="background:#ff5f56;"></div>
+      <div class="screen-dot" style="background:#ffbd2e;"></div>
+      <div class="screen-dot" style="background:#27c93f;"></div>
+      <div class="url-bar">localhost:5678</div>
+    </div>
+    <div style="background:#1a1a2e;padding:10px 14px;border-bottom:1px solid #2d2d44;display:flex;align-items:center;justify-content:space-between;">
+      <span style="color:#4fc3f7;font-weight:bold;font-size:0.9em;">n8n</span>
+      <span style="background:#1a3a1a;border:1px solid #4caf50;color:#4caf50;border-radius:20px;padding:3px 12px;font-size:0.8em;">● Active</span>
+    </div>
+    <div class="n8n-bg">
+      <div style="font-size:0.8em;color:#90a4ae;margin-bottom:10px;">Workflow: Telegram Claude Bot</div>
+      <div class="n8n-flow">
+        <div class="n8n-node green">📩 Telegram Trigger</div>
+        <div class="n8n-arrow">→</div>
+        <div class="n8n-node green">✂️ Extract Message</div>
+        <div class="n8n-arrow">→</div>
+        <div class="n8n-node green">🧠 Claude API</div>
+        <div class="n8n-arrow">→</div>
+        <div class="n8n-node green">📤 Send Reply</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note tip">✅ ทุก node สีเขียว = เชื่อมต่อสมบูรณ์ Bot พร้อมรับข้อความแล้ว</div>
+</div>
+
+<!-- ════════════════════════════════════════ -->
+<!-- STEP 7: ทดสอบ Bot -->
+<!-- ════════════════════════════════════════ -->
+<div class="step-wrap">
+  <div class="step-header">
+    <div class="step-badge done">7</div>
+    <div>
+      <div class="step-title">ทดสอบ Bot ใน Telegram ✅</div>
+      <div class="step-desc">หา Bot ที่สร้างไว้ → ส่งข้อความ → รอ Claude ตอบกลับ 3-5 วินาที</div>
+    </div>
+  </div>
+
+  <div class="screen telegram">
+    <div class="screen-bar">
+      <div class="screen-dot" style="background:#ff5f56;"></div>
+      <div class="screen-dot" style="background:#ffbd2e;"></div>
+      <div class="screen-dot" style="background:#27c93f;"></div>
+    </div>
+    <div class="tg-header">
+      <div class="tg-avatar" style="background:#5e35b1;">🌊</div>
+      <div>
+        <div class="tg-name">waveFK Assistant</div>
+        <div class="tg-status" style="color:#4caf50;">● online</div>
+      </div>
+    </div>
+    <div class="tg-msgs">
+      <div class="msg-out">สวัสดี ช่วยอะไรได้บ้าง?<div class="msg-time">คุณ · 14:32</div></div>
+      <div class="msg-in">
+        สวัสดีครับ! ผมคือ waveFK Assistant 🌊<br><br>
+        ผมช่วยคุณได้หลายอย่างเลยครับ เช่น:<br>
+        • ตอบคำถามทั่วไป<br>
+        • สรุปข้อความ<br>
+        • แปลภาษา<br>
+        • ช่วยคิดและวางแผน<br><br>
+        ลองถามมาได้เลยครับ! 😊
+        <div class="msg-time">waveFK Bot · 14:32</div>
+      </div>
+    </div>
+    <div class="tg-input">🎤 &nbsp; พิมพ์ข้อความ...</div>
+  </div>
+
+  <div class="note tip" style="margin-top:10px;">🎉 <strong>ระบบพร้อมใช้งานแล้ว!</strong> ส่งข้อความอะไรก็ได้ Claude จะตอบกลับทุกครั้ง</div>
+  <div class="note" style="margin-top:8px;">⚠️ <strong>สำคัญ:</strong> คอมที่บ้านต้องเปิดอยู่ และ n8n ต้องรันอยู่เสมอ (หน้าต่าง PowerShell จาก Step 4)</div>
+</div>
+
+</body>
+</html>
