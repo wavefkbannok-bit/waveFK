@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>waveFK — ภาพรวมระบบ</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #0d1117;
+  color: #e6edf3;
+  padding: 30px 20px 60px;
+}
+h1 { text-align:center; color:#58a6ff; font-size:1.6em; margin-bottom:6px; }
+.subtitle { text-align:center; color:#8b949e; margin-bottom:40px; font-size:0.95em; }
+
+/* ─── Section ─── */
+.section { max-width:860px; margin:0 auto 50px; }
+.section-title {
+  font-size:1.1em; font-weight:bold;
+  color:#f0f6fc; margin-bottom:18px;
+  padding-left:12px;
+  border-left:3px solid #58a6ff;
+}
+
+/* ─── Architecture Flow ─── */
+.arch-flow {
+  display:flex; align-items:center; justify-content:center;
+  flex-wrap:wrap; gap:0;
+}
+.arch-node {
+  display:flex; flex-direction:column; align-items:center;
+  background:#161b22; border:1.5px solid #30363d;
+  border-radius:14px; padding:16px 20px;
+  min-width:120px; text-align:center;
+  position:relative;
+}
+.arch-node .icon { font-size:2em; margin-bottom:6px; }
+.arch-node .label { font-size:0.8em; color:#8b949e; margin-bottom:3px; }
+.arch-node .name { font-size:0.95em; font-weight:bold; color:#e6edf3; }
+.arch-node.highlight { border-color:#58a6ff; background:#0d2045; }
+.arch-arrow {
+  font-size:1.5em; color:#58a6ff; padding:0 6px;
+  display:flex; align-items:center;
+}
+.arch-arrow span { font-size:0.7em; color:#8b949e; display:block; text-align:center; white-space:nowrap; }
+
+/* ─── Step Cards ─── */
+.steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; }
+.step-card {
+  background:#161b22; border:1px solid #30363d;
+  border-radius:12px; padding:18px;
+}
+.step-card .step-num {
+  background:#58a6ff; color:#0d1117;
+  border-radius:50%; width:28px; height:28px;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:bold; font-size:0.9em; margin-bottom:10px;
+}
+.step-card h3 { color:#f0f6fc; font-size:0.95em; margin-bottom:8px; }
+.step-card p { color:#8b949e; font-size:0.85em; line-height:1.5; }
+.step-card .tag {
+  display:inline-block; margin-top:8px;
+  background:#21262d; border:1px solid #30363d;
+  border-radius:6px; padding:2px 8px;
+  font-size:0.75em; color:#58a6ff;
+}
+.step-card.auto { border-color:#238636; }
+.step-card.auto .step-num { background:#238636; }
+.step-card.manual { border-color:#d29922; }
+.step-card.manual .step-num { background:#d29922; color:#0d1117; }
+
+/* ─── Message Flow ─── */
+.msg-flow { display:flex; flex-direction:column; gap:0; }
+.msg-row {
+  display:flex; align-items:stretch; gap:0;
+}
+.msg-timeline {
+  width:60px; display:flex; flex-direction:column;
+  align-items:center; flex-shrink:0;
+}
+.msg-dot {
+  width:14px; height:14px; border-radius:50%;
+  background:#58a6ff; border:2px solid #0d1117;
+  flex-shrink:0; margin-top:18px;
+  z-index:1;
+}
+.msg-line {
+  width:2px; background:#30363d;
+  flex:1; margin:0 auto;
+}
+.msg-content {
+  flex:1; padding:14px 16px;
+  background:#161b22; border:1px solid #30363d;
+  border-radius:10px; margin:6px 0 6px 0;
+}
+.msg-content .from { font-size:0.75em; color:#8b949e; margin-bottom:4px; }
+.msg-content .bubble {
+  display:inline-block; padding:8px 14px;
+  border-radius:8px; font-size:0.9em;
+  max-width:90%;
+}
+.bubble-you { background:#1f6feb; color:#fff; border-radius:8px 8px 2px 8px; }
+.bubble-bot { background:#21262d; color:#e6edf3; border-radius:8px 8px 8px 2px; border:1px solid #30363d; }
+.bubble-claude { background:#2d1b69; color:#c9b1fd; border-radius:8px; border:1px solid #6e40c9; }
+.msg-content .process {
+  display:flex; align-items:center; gap:8px;
+  color:#8b949e; font-size:0.85em;
+}
+.process-icon { font-size:1.1em; }
+
+/* ─── File Structure ─── */
+.file-tree {
+  background:#161b22; border:1px solid #30363d;
+  border-radius:12px; padding:20px;
+  font-family:'Consolas','Courier New',monospace;
+  font-size:0.9em; line-height:1.8;
+}
+.file-tree .dir { color:#58a6ff; }
+.file-tree .file { color:#e6edf3; }
+.file-tree .desc { color:#8b949e; font-size:0.82em; margin-left:8px; }
+.file-tree .auto-tag {
+  background:#0d2045; border:1px solid #1f6feb;
+  border-radius:4px; padding:1px 6px;
+  font-size:0.75em; color:#58a6ff; margin-left:6px;
+}
+.file-tree .manual-tag {
+  background:#1c1400; border:1px solid #d29922;
+  border-radius:4px; padding:1px 6px;
+  font-size:0.75em; color:#d29922; margin-left:6px;
+}
+
+/* ─── Legend ─── */
+.legend { display:flex; gap:20px; flex-wrap:wrap; margin-bottom:16px; }
+.legend-item { display:flex; align-items:center; gap:6px; font-size:0.85em; color:#8b949e; }
+.legend-dot { width:12px; height:12px; border-radius:3px; flex-shrink:0; }
+</style>
+</head>
+<body>
+
+<h1>🌊 waveFK — ภาพรวมระบบ</h1>
+<p class="subtitle">Home Assistant ที่สั่งงานผ่าน Telegram โดยมีคอมที่บ้านเป็นตัวหลัก</p>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- DIAGRAM 1: Architecture -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">📡 ภาพรวมการเชื่อมต่อ</div>
+  <div class="arch-flow">
+
+    <div class="arch-node">
+      <div class="icon">📱</div>
+      <div class="label">มือถือคุณ</div>
+      <div class="name">Telegram App</div>
+    </div>
+
+    <div class="arch-arrow">
+      <div>
+        <div>→</div>
+        <span>ส่งข้อความ<br>(อินเทอร์เน็ต)</span>
+      </div>
+    </div>
+
+    <div class="arch-node">
+      <div class="icon">🤖</div>
+      <div class="label">เซิร์ฟเวอร์ Telegram</div>
+      <div class="name">Telegram Cloud</div>
+    </div>
+
+    <div class="arch-arrow">
+      <div>
+        <div>→</div>
+        <span>webhook<br>(อินเทอร์เน็ต)</span>
+      </div>
+    </div>
+
+    <div class="arch-node highlight">
+      <div class="icon">🖥️</div>
+      <div class="label">คอมที่บ้านคุณ</div>
+      <div class="name">n8n (localhost)</div>
+    </div>
+
+    <div class="arch-arrow">
+      <div>
+        <div>→</div>
+        <span>API call<br>(อินเทอร์เน็ต)</span>
+      </div>
+    </div>
+
+    <div class="arch-node">
+      <div class="icon">🧠</div>
+      <div class="label">Anthropic Server</div>
+      <div class="name">Claude AI</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- DIAGRAM 2: Message Flow -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">💬 เกิดอะไรขึ้นเมื่อส่งข้อความ</div>
+  <div class="msg-flow">
+
+    <div class="msg-row">
+      <div class="msg-timeline">
+        <div class="msg-dot" style="background:#2ea043;"></div>
+        <div class="msg-line"></div>
+      </div>
+      <div class="msg-content">
+        <div class="from">📱 คุณพิมพ์ใน Telegram</div>
+        <div class="bubble bubble-you">สวัสดี ช่วยสรุปข่าววันนี้ให้หน่อย</div>
+      </div>
+    </div>
+
+    <div class="msg-row">
+      <div class="msg-timeline">
+        <div class="msg-dot" style="background:#58a6ff;"></div>
+        <div class="msg-line"></div>
+      </div>
+      <div class="msg-content">
+        <div class="process">
+          <span class="process-icon">🖥️</span>
+          <span><strong>n8n (คอมที่บ้าน)</strong> รับข้อความผ่าน Telegram Trigger node</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="msg-row">
+      <div class="msg-timeline">
+        <div class="msg-dot" style="background:#8957e5;"></div>
+        <div class="msg-line"></div>
+      </div>
+      <div class="msg-content">
+        <div class="process">
+          <span class="process-icon">📤</span>
+          <span><strong>n8n ส่งต่อ</strong> ข้อความไปยัง Claude API (Anthropic Server)</span>
+        </div>
+        <div class="bubble bubble-claude" style="margin-top:8px; font-size:0.82em;">
+          POST /v1/messages<br>model: claude-haiku-4-5<br>message: "สวัสดี ช่วยสรุปข่าว..."
+        </div>
+      </div>
+    </div>
+
+    <div class="msg-row">
+      <div class="msg-timeline">
+        <div class="msg-dot" style="background:#8957e5;"></div>
+        <div class="msg-line"></div>
+      </div>
+      <div class="msg-content">
+        <div class="process">
+          <span class="process-icon">🧠</span>
+          <span><strong>Claude AI</strong> คิดและสร้างคำตอบ ส่งกลับมายัง n8n</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="msg-row">
+      <div class="msg-timeline">
+        <div class="msg-dot" style="background:#2ea043;"></div>
+        <div class="msg-dot" style="background:transparent; border:none;"></div>
+      </div>
+      <div class="msg-content">
+        <div class="from">🤖 Bot ตอบกลับใน Telegram</div>
+        <div class="bubble bubble-bot">สวัสดีครับ! ผมพร้อมช่วยเหลือคุณแล้ว อยากให้สรุปข่าวด้านไหนเป็นพิเศษไหมครับ?</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- DIAGRAM 3: Setup Steps -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">🔧 ขั้นตอนการติดตั้ง</div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#238636;"></div> ทำเองได้ (อัตโนมัติ)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#d29922;"></div> ต้องทำด้วยตัวเอง (แค่ 2 ขั้นนี้)</div>
+  </div>
+
+  <div class="steps">
+
+    <div class="step-card auto">
+      <div class="step-num">1</div>
+      <h3>ดาวน์โหลด repo</h3>
+      <p>Download ZIP จาก GitHub แตกไฟล์ไว้ที่คอม</p>
+      <div class="tag">⚡ 1 คลิก</div>
+    </div>
+
+    <div class="step-card manual">
+      <div class="step-num">2</div>
+      <h3>สร้าง Telegram Bot</h3>
+      <p>คุยกับ @BotFather → /newbot → ได้ Bot Token มา ดู telegram-guide.html</p>
+      <div class="tag">👤 ต้องทำเอง</div>
+    </div>
+
+    <div class="step-card auto">
+      <div class="step-num">3</div>
+      <h3>รัน START-HERE.bat [1]</h3>
+      <p>ติดตั้ง Node.js + n8n อัตโนมัติ รอ 3-5 นาที</p>
+      <div class="tag">⚡ อัตโนมัติ</div>
+    </div>
+
+    <div class="step-card manual">
+      <div class="step-num">4</div>
+      <h3>รัน START-HERE.bat [2]</h3>
+      <p>ใส่ Bot Token + Claude API Key แค่นี้ สคริปต์จัดการทุกอย่างให้เอง</p>
+      <div class="tag">👤 ใส่ 2 ค่า</div>
+    </div>
+
+    <div class="step-card auto">
+      <div class="step-num">5</div>
+      <h3>ทดสอบ Bot</h3>
+      <p>เปิด Telegram → หา Bot → ส่งข้อความ "สวัสดี" → Claude ตอบ!</p>
+      <div class="tag">✅ พร้อมใช้</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- DIAGRAM 4: File Structure -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">📁 โครงสร้างไฟล์ใน repo</div>
+  <div class="file-tree">
+    <div><span class="dir">📁 waveFK/</span></div>
+    <div>&nbsp;&nbsp;<span class="file">📄 README.md</span><span class="desc">คู่มือ setup ภาษาไทย</span></div>
+    <div>&nbsp;&nbsp;<span class="file">📄 .env.example</span><span class="desc">template สำหรับ API Keys</span></div>
+    <div>&nbsp;&nbsp;<span class="dir">📁 workflow/</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">📄 telegram-claude-bot.json</span><span class="auto-tag">auto import</span><span class="desc"> n8n workflow</span></div>
+    <div>&nbsp;&nbsp;<span class="dir">📁 setup/</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">🚀 START-HERE.bat</span><span class="desc"> จุดเริ่มต้น — เปิดไฟล์นี้ก่อนเลย</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">⚙️ 1-install.ps1</span><span class="auto-tag">auto</span><span class="desc"> ติดตั้ง Node.js + n8n</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">⚙️ 2-autosetup.ps1</span><span class="auto-tag">auto</span><span class="desc"> ตั้งค่า n8n ผ่าน API</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">🌐 telegram-guide.html</span><span class="manual-tag">manual</span><span class="desc"> คู่มือสร้าง Bot</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">🌐 diagram.html</span><span class="desc"> ไฟล์นี้ — ภาพรวมระบบ</span></div>
+  </div>
+</div>
+
+</body>
+</html>
